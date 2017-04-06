@@ -32,13 +32,18 @@ namespace DellServiceTagSelenium
         ComSourceInterfaces(typeof(IComClassSeleniumDataScrapperEvents))]
     [ComVisible(true)]
     [ProgId("ProgId.DatabaseWritter")]
-    public class SeleniumDataScrapper : IComClassSeleniumDataScrapper
+    public class SeleniumDataScrapper : IComClassSeleniumDataScrapper, IDisposable
     {
         public SeleniumDataScrapper() {
             this.Driver = new ChromeDriver(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Driver\"));
         }
 
         public ChromeDriver Driver { get; private set; }
+
+        public void Dispose()
+        {
+            this.Driver.Dispose();
+        }
 
         public IComClassDellAsset GetDellAsset(string serviceTag)
         {
