@@ -7,8 +7,8 @@
     <ProjectGuid>{3C9648BE-1631-4E16-BE29-EB53A6FEF994}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DellServiceTag</RootNamespace>
-    <AssemblyName>DellServiceTag</AssemblyName>
+    <RootNamespace>DellServiceTagLauncher</RootNamespace>
+    <AssemblyName>DellServiceTagLauncher</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

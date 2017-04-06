@@ -7,8 +7,8 @@
     <ProjectGuid>{2123A5B1-0C20-4BF5-85A2-BA5775453DB2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DellServiceTagCaller</RootNamespace>
-    <AssemblyName>DellServiceTagCaller</AssemblyName>
+    <RootNamespace>DellServiceTagData</RootNamespace>
+    <AssemblyName>DellServiceTagData</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

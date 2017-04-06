@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace DellServiceTagData
 {
     [Guid("EAA4976A-45C3-4BC5-BC0B-E474F4C3C83E")]
+    [ComVisible(true)]
     public interface IComClassDellAsset
     {
          string CountryLookupCode { get; set; }
@@ -25,6 +26,7 @@ namespace DellServiceTagData
 
     [Guid("7BD20046-DF8C-44A6-8F6B-687FAA26FA70"),
     InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    [ComVisible(true)]
     public interface IComClassDellAssetEvents
     {
     }
@@ -32,6 +34,8 @@ namespace DellServiceTagData
     [Guid("0D53A3E8-E51A-49C7-944E-E72A2064F937"),
         ClassInterface(ClassInterfaceType.None),
         ComSourceInterfaces(typeof(IComClassDellAssetEvents))]
+    [ComVisible(true)]
+    [ProgId("ProgId.DellAsset")]
     public class DellAsset : IComClassDellAsset
     {
         public string CountryLookupCode { get; set; }

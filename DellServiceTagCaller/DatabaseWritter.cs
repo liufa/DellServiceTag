@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 namespace DellServiceTagData
 {
     [Guid("EAA4976A-45C3-4BC5-BC0B-E474F4C3C83D")]
+    [ComVisible(true)]
     public interface IComClassDatabaseWritter
     {
         void CreateDellAsset(IComClassDellAsset asset);
@@ -17,6 +18,7 @@ namespace DellServiceTagData
 
     [Guid("7BD20046-DF8C-44A6-8F6B-687FAA26FA69"),
     InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    [ComVisible(true)]
     public interface IComClassDatabaseWritterEvents
     {
     }
@@ -24,6 +26,8 @@ namespace DellServiceTagData
     [Guid("0D53A3E8-E51A-49C7-944E-E72A2064F936"),
         ClassInterface(ClassInterfaceType.None),
         ComSourceInterfaces(typeof(IComClassDatabaseWritterEvents))]
+    [ComVisible(true)]
+    [ProgId("ProgId.DatabaseWritter")]
     public class DatabaseWritter : IComClassDatabaseWritter
     {
         public void CreateDellAsset(IComClassDellAsset asset)

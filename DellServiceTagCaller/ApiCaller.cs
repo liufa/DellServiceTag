@@ -11,6 +11,7 @@ using System.Web.Script.Serialization;
 namespace DellServiceTagData
 {
     [Guid("EAA4976A-45C3-4BC5-BC0B-E474F4C3C83F")]
+    [ComVisible(true)]
     public interface IComClassApiCaller
     {
         IComClassDellAsset GetDellAsset(string serviceTag, string apiKey);
@@ -19,6 +20,7 @@ namespace DellServiceTagData
 
     [Guid("7BD20046-DF8C-44A6-8F6B-687FAA26FA71"),
     InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    [ComVisible(true)]
     public interface IComClassApiCallerEvents
     {
     }
@@ -26,6 +28,8 @@ namespace DellServiceTagData
     [Guid("0D53A3E8-E51A-49C7-944E-E72A2064F938"),
         ClassInterface(ClassInterfaceType.None),
         ComSourceInterfaces(typeof(IComClassApiCallerEvents))]
+    [ComVisible(true)]
+    [ProgId("ProgId.ApiCaller")]
     public class ApiCaller : IComClassApiCaller
     {
        
