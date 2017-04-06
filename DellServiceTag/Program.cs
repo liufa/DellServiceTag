@@ -15,7 +15,7 @@ namespace DellServiceTagLauncher
         {
             try
             {
-                var serviceTag = "9QWPGT1";
+                var serviceTag = args[0];// "9QWPGT1";
                 var dellAsset = new ApiCaller().GetDellAsset(serviceTag, "asdadadasd");
                 if (dellAsset == null)
                 {
@@ -24,7 +24,6 @@ namespace DellServiceTagLauncher
                         dellAsset = selenium.GetDellAsset(serviceTag);
                     }
                 }
-
                 new DatabaseWritter().CreateDellAsset(dellAsset);
             }
             catch (Exception e)
