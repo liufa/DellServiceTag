@@ -1,4 +1,5 @@
 ﻿using DellServiceTagData;
+using DellServiceTagSelenium;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,13 @@ namespace DellServiceTag
         {
             try
             {
-                var getDellAsset = new ApiCaller().GetDellAsset("asdasd", "asdadadasd");
+                var assetId = "9QWPGT1";
+                var getDellAsset = new ApiCaller().GetDellAsset(assetId, "asdadadasd");
+                if (getDellAsset == null)
+                {
+                    var selenium = new SeleniumDataScrapper();
+                    var dellAsset = selenium.GetDellAsset(assetId);
+                }
                 new DatabaseWritter().CreateDellAsset(new DellAsset
                 {
                     CountryLookupCode = "CountryLookupCode",

@@ -59,6 +59,10 @@
       <Project>{2123A5B1-0C20-4BF5-85A2-BA5775453DB2}</Project>
       <Name>DellServiceTagData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DellServiceTagSelenium\DellServiceTagSelenium.csproj">
+      <Project>{EDBB1F5C-8121-42E3-9F14-E0B0A23D1A93}</Project>
+      <Name>DellServiceTagSelenium</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
