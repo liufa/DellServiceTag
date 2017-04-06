@@ -16,25 +16,13 @@ namespace DellServiceTagLauncher
             try
             {
                 var assetId = "9QWPGT1";
-                var getDellAsset = new ApiCaller().GetDellAsset(assetId, "asdadadasd");
-                if (getDellAsset == null)
+                var dellAsset = new ApiCaller().GetDellAsset(assetId, "asdadadasd");
+                if (dellAsset == null)
                 {
                     var selenium = new SeleniumDataScrapper();
-                    var dellAsset = selenium.GetDellAsset(assetId);
+                     dellAsset = selenium.GetDellAsset(assetId);
                 }
-                new DatabaseWritter().CreateDellAsset(new DellAsset
-                {
-                    CountryLookupCode = "CountryLookupCode",
-                    CustomerNumber = "CustomerNumber",
-                    IsDuplicate = false,
-                    ItemClassCode = "ItemClassCode",
-                    LocalChannel = "LocalChannel",
-                    MachineDescription = "MachineDescription",
-                    OrderNumber = "OrderNumber",
-                    ParentServiceTag = "ParentServiceTag",
-                    ServiceTag = "ServiceTag",
-                    ShipDate = "ShipDate"
-                });
+                new DatabaseWritter().CreateDellAsset(dellAsset);
             }
             catch (Exception e) {
                 File.AppendAllLines("log.txt", new[] { Environment.NewLine, DateTime.Now.ToString(), e.Message, e.StackTrace });

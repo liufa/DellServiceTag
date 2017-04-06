@@ -32,22 +32,23 @@ namespace DellServiceTagData
     {
         public void CreateDellAsset(IComClassDellAsset asset)
         {
-            string connString = "Server=12.41.72.28;Port=3306;Database=gpdb;Uid=allgreen2;Pwd=6B^94J@BZ4$p@bwZ;Allow User Variables=True";
+            string connString = "Server=12.41.72.28;Port=3306;Database=gpdb;Uid=allgreen2;Pwd=7Ld4S8d4TaDWApVW;Allow User Variables=True";
             using (var conn = new MySqlConnection(connString))
             {
                 conn.Open();
                 MySqlCommand comm = conn.CreateCommand();
                 comm.CommandText =
-                    @"INSERT INTO tbldellservicetags(country_lookup_code,customer_number,is_duplicate,item_class_code,local_channel,machine_description,order_number,parent_service_tag,service_tag,ship_date) 
-                    VALUES(@country_lookup_code, @customer_number, @is_duplicate, @item_class_code, @local_channel, @machine_description, @order_number, @parent_service_tag, @service_tag, @ship_date)";
+                    @"INSERT INTO tbldellservicetags(
+country_lookup_code,machine_description,service_tag,ship_date) 
+                    VALUES(@country_lookup_code,  @machine_description, @service_tag, @ship_date)";
                 comm.Parameters.AddWithValue("@country_lookup_code", asset.CountryLookupCode);
-                comm.Parameters.AddWithValue("@customer_number", asset.CustomerNumber);
-                comm.Parameters.AddWithValue("@is_duplicate", asset.IsDuplicate);
-                comm.Parameters.AddWithValue("@item_class_code", asset.ItemClassCode);
-                comm.Parameters.AddWithValue("@local_channel", asset.LocalChannel);
+             //   comm.Parameters.AddWithValue("@customer_number", asset.CustomerNumber);
+             //   comm.Parameters.AddWithValue("@is_duplicate", asset.IsDuplicate);
+             //   comm.Parameters.AddWithValue("@item_class_code", asset.ItemClassCode);
+            //    comm.Parameters.AddWithValue("@local_channel", asset.LocalChannel);
                 comm.Parameters.AddWithValue("@machine_description", asset.MachineDescription);
-                comm.Parameters.AddWithValue("@order_number", asset.OrderNumber);
-                comm.Parameters.AddWithValue("@parent_service_tag", asset.ParentServiceTag);
+           //     comm.Parameters.AddWithValue("@order_number", asset.OrderNumber);
+           //     comm.Parameters.AddWithValue("@parent_service_tag", asset.ParentServiceTag);
                 comm.Parameters.AddWithValue("@service_tag", asset.ServiceTag);
                 comm.Parameters.AddWithValue("@ship_date", asset.ShipDate);
                 comm.ExecuteNonQuery();
