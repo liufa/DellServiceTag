@@ -4,13 +4,35 @@ using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DellServiceTagSelenium
 {
-    public class SeleniumDataScrapper
+    [Guid("EAA4976A-45C3-4BC5-BC0B-E474F4C3C82D")]
+    [ComVisible(true)]
+    public interface IComClassSeleniumDataScrapper
+    {
+        ChromeDriver Driver { get; }
+        IComClassDellAsset GetDellAsset(string serviceTag);
+
+    }
+
+    [Guid("7BD20046-DF8C-44A6-8F6B-687FAA26FA59"),
+    InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    [ComVisible(true)]
+    public interface IComClassSeleniumDataScrapperEvents
+    {
+    }
+
+    [Guid("0D53A3E8-E51A-49C7-944E-E72A2064F926"),
+        ClassInterface(ClassInterfaceType.None),
+        ComSourceInterfaces(typeof(IComClassSeleniumDataScrapperEvents))]
+    [ComVisible(true)]
+    [ProgId("ProgId.DatabaseWritter")]
+    public class SeleniumDataScrapper : IComClassSeleniumDataScrapper
     {
         public SeleniumDataScrapper() {
             this.Driver = new ChromeDriver(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Driver\"));
