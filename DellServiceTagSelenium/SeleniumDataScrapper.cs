@@ -61,6 +61,8 @@ namespace DellServiceTagSelenium
 
             this.Driver.FindElementById("tab-configuration").Click();
             Thread.Sleep(5000);
+            this.Driver.FindElementById("firstTab").Click();
+            Thread.Sleep(1000);
             var configurationDivContainer = this.Driver.FindElementsById("subSectionA").First();
 
             var rows = configurationDivContainer.FindElements(By.CssSelector("tr"));
