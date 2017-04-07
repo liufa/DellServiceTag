@@ -79,6 +79,26 @@ country_lookup_code,machine_description,service_tag,ship_date,express_Service_Co
                     }
                 }
 
+                foreach (var driver in asset.Drivers)
+                {
+                    var componentCom = connection.CreateCommand();
+                    componentCom.CommandText = @"INSERT INTO tbldellservicetagdrivers(
+                        parent_id,description,component,name,file_name,version,importance,release_date,last_updated,download_link) 
+                    VALUES(@parent_id,  @description,@component,@name,@file_name,@version,@importance,@release_date,@last_updated,@download_link)";
+                    componentCom.Parameters.AddWithValue("@parent_id", id);
+                    componentCom.Parameters.AddWithValue("@description", driver.Description);
+                    componentCom.Parameters.AddWithValue("@component", driver.Component);
+                    componentCom.Parameters.AddWithValue("@name", driver.Name);
+                    componentCom.Parameters.AddWithValue("@file_name", driver.Filename);
+                    componentCom.Parameters.AddWithValue("@version", driver.Version);
+                    componentCom.Parameters.AddWithValue("@importance", driver.Importance);
+                    componentCom.Parameters.AddWithValue("@release_date", driver.ReleaseDate);
+                    componentCom.Parameters.AddWithValue("@last_updated", driver.LastUpdated);
+                    componentCom.Parameters.AddWithValue("@download_link", driver.Url);
+                    componentCom.ExecuteNonQuery();
+                    
+                }
+
                 connection.Close();
             }
         }
