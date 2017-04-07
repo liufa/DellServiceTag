@@ -81,6 +81,7 @@ namespace DellServiceTagSelenium
                 ShipDate = shippingDate.ToString("yyyy-MM-dd"),
                 CountryLookupCode = country,
                 Components = new List<IComClassComponent>(),
+                Drivers = new List<IComClassDriver>(),
                 ExpressServiceCode = expressServiceCode,
                 RegulatoryModel = regulatoryModel,
                 RegulatoryType = regulatoryType
@@ -121,6 +122,47 @@ namespace DellServiceTagSelenium
 
             this.Driver.FindElementById("tab-drivers").Click();
             Thread.Sleep(3000);
+
+            var driversSection = this.Driver.FindElementById("divDriversSection");
+
+            var driverContainrs = driversSection.FindElements(By.CssSelector("[ng-repeat='driverData in driversBaseData track by $index']"));
+
+
+            foreach (var driverContainer in driverContainrs)
+            {
+                var toggle = driverContainer.FindElement(By.CssSelector(@"[ng-attr-id=""{{'header' + driverData.key }}""]"));
+                toggle.Click();
+                Thread.Sleep(500);
+                var component = toggle.Text.Split(new[] {" (" }, StringSplitOptions.None)[0];
+                var driverMains = driverContainer.FindElements(By.CssSelector(@"[ng-repeat=""drivers in driverData.value | orderBy:'-ReleaseDateValue' track by drivers.DriverId ""]"));
+
+                foreach (var drivermain in driverMains)
+                {
+                    var name = drivermain.FindElement(By.TagName("h4")).Text;
+                    var driverRows = drivermain.FindElements(By.CssSelector("[class^='col-lg-']"));
+                    var filename = driverRows.Where(o => o.Text.Contains("File Name")).FirstOrDefault()?.Text?.Replace("File Name: ", "");
+                    var description = driverRows.Where(o => o.Text.Contains("Description")).FirstOrDefault()?.Text?.Replace("Description: ", "");
+                    var version = driverRows.Where(o => o.Text.Contains("Version: ")).FirstOrDefault()?.Text?.Replace("Version: ", "");
+                    var importance = driverRows.Where(o => o.Text.Contains("Importance: ")).FirstOrDefault()?.Text?.Replace("Importance: ", "");
+                    var releaseDate = driverRows.Where(o => o.Text.Contains("Release Date: ")).FirstOrDefault()?.Text?.Replace("Release Date: ", "");
+                    var lastUpdated = driverRows.Where(o => o.Text.Contains("Last Updated: ")).FirstOrDefault()?.Text?.Replace("Last Updated: ", "");
+                    var driverUrl = drivermain.FindElement(By.CssSelector("a.text-blue.dellmetrics-driverdownloads.driverHomeDownload.ng-binding"))?.GetAttribute("href");
+
+                    dellAsset.Drivers.Add(
+                        new Driver
+                        {
+                            Component = component,
+                            Description = description,
+                            Filename = filename,
+                            Importance = importance,
+                            LastUpdated = DateTime.ParseExact(lastUpdated, new[] { "dd MMM yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind),
+                            ReleaseDate = DateTime.ParseExact(releaseDate, new[] { "dd MMM yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind),
+                            Name = name,
+                            Url = driverUrl,
+                            Version = version
+                        });
+                }
+            }
 
             return dellAsset;
         }
