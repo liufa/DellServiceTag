@@ -84,25 +84,30 @@ namespace DellServiceTagSelenium
 
             foreach (var container in containers)
             {
-                var heading = componentSection.FindElement(By.CssSelector("[onclick='enableExpColBtn();']"));
-                heading.Click();
-                Thread.Sleep(500);
-                var component = new Component { Description = heading.Text, Parts = new List<IComClassPart>() };
-                var tdCells = container.FindElements(By.CssSelector("td"));
-                foreach (var tdCell in tdCells) {
-                    if (!tdCell.Text.Contains("Part Number"))
+                if (!string.IsNullOrWhiteSpace(container.Text))
+                {
+                    var heading = container.FindElement(By.CssSelector("[onclick='enableExpColBtn();']"));
+                    heading.Click();
+                    Thread.Sleep(500);
+                    var component = new Component { Description = heading.Text, Parts = new List<IComClassPart>() };
+                    var tdCells = container.FindElements(By.CssSelector("td"));
+                    foreach (var tdCell in tdCells)
                     {
-                        var divCells = tdCell.FindElements(By.CssSelector("div"));
-                        component.Parts.Add(
-                            new Part {
-                                PartNumber = divCells[0].Text,
-                                Quantity = short.Parse(divCells[1].Text),
-                                Description = divCells[2].Text
-                            });
+                        if (!tdCell.Text.Contains("Part Number") && !string.IsNullOrWhiteSpace(tdCell.Text))
+                        {
+                            var divCells = tdCell.FindElements(By.CssSelector("div"));
+                            component.Parts.Add(
+                                new Part
+                                {
+                                    PartNumber = divCells[0].Text,
+                                    Quantity = short.Parse(divCells[1].Text),
+                                    Description = divCells[2].Text
+                                });
+                        }
                     }
-                }
 
-                dellAsset.Components.Add(component);
+                    dellAsset.Components.Add(component);
+                }
             }
 
 
