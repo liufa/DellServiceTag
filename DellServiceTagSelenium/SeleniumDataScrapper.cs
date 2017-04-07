@@ -60,7 +60,7 @@ namespace DellServiceTagSelenium
             var regulatoryType = regulatory.Where(o => o.Text.Contains("Regulatory Type")).FirstOrDefault()?.Text?.Replace("Regulatory Type ", "");
 
             this.Driver.FindElementById("tab-configuration").Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(5000);
             var configurationDivContainer = this.Driver.FindElementsById("subSectionA").First();
 
             var rows = configurationDivContainer.FindElements(By.CssSelector("tr"));
@@ -121,8 +121,9 @@ namespace DellServiceTagSelenium
             }
 
             this.Driver.FindElementById("tab-drivers").Click();
-            Thread.Sleep(3000);
-
+            Thread.Sleep(5000);
+            this.Driver.FindElement(By.Id("DndAdvTabLink")).Click();
+            Thread.Sleep(500);
             var driversSection = this.Driver.FindElementById("divDriversSection");
 
             var driverContainrs = driversSection.FindElements(By.CssSelector("[ng-repeat='driverData in driversBaseData track by $index']"));
@@ -131,36 +132,39 @@ namespace DellServiceTagSelenium
             foreach (var driverContainer in driverContainrs)
             {
                 var toggle = driverContainer.FindElement(By.CssSelector(@"[ng-attr-id=""{{'header' + driverData.key }}""]"));
-                toggle.Click();
-                Thread.Sleep(500);
-                var component = toggle.Text.Split(new[] {" (" }, StringSplitOptions.None)[0];
-                var driverMains = driverContainer.FindElements(By.CssSelector(@"[ng-repeat=""drivers in driverData.value | orderBy:'-ReleaseDateValue' track by drivers.DriverId ""]"));
-
-                foreach (var drivermain in driverMains)
+                if (toggle != null && toggle.Displayed)
                 {
-                    var name = drivermain.FindElement(By.TagName("h4")).Text;
-                    var driverRows = drivermain.FindElements(By.CssSelector("[class^='col-lg-']"));
-                    var filename = driverRows.Where(o => o.Text.Contains("File Name")).FirstOrDefault()?.Text?.Replace("File Name: ", "");
-                    var description = driverRows.Where(o => o.Text.Contains("Description")).FirstOrDefault()?.Text?.Replace("Description: ", "");
-                    var version = driverRows.Where(o => o.Text.Contains("Version: ")).FirstOrDefault()?.Text?.Replace("Version: ", "");
-                    var importance = driverRows.Where(o => o.Text.Contains("Importance: ")).FirstOrDefault()?.Text?.Replace("Importance: ", "");
-                    var releaseDate = driverRows.Where(o => o.Text.Contains("Release Date: ")).FirstOrDefault()?.Text?.Replace("Release Date: ", "");
-                    var lastUpdated = driverRows.Where(o => o.Text.Contains("Last Updated: ")).FirstOrDefault()?.Text?.Replace("Last Updated: ", "");
-                    var driverUrl = drivermain.FindElement(By.CssSelector("a.text-blue.dellmetrics-driverdownloads.driverHomeDownload.ng-binding"))?.GetAttribute("href");
+                    toggle.Click();
+                    Thread.Sleep(500);
+                    var component = toggle.Text.Split(new[] { " (" }, StringSplitOptions.None)[0];
+                    var driverMains = driverContainer.FindElements(By.CssSelector(@"[ng-repeat=""drivers in driverData.value | orderBy:'-ReleaseDateValue' track by drivers.DriverId ""]"));
 
-                    dellAsset.Drivers.Add(
-                        new Driver
-                        {
-                            Component = component,
-                            Description = description,
-                            Filename = filename,
-                            Importance = importance,
-                            LastUpdated = DateTime.ParseExact(lastUpdated, new[] { "dd MMM yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind),
-                            ReleaseDate = DateTime.ParseExact(releaseDate, new[] { "dd MMM yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind),
-                            Name = name,
-                            Url = driverUrl,
-                            Version = version
-                        });
+                    foreach (var drivermain in driverMains)
+                    {
+                        var name = drivermain.FindElement(By.TagName("h4")).Text;
+                        var driverRows = drivermain.FindElements(By.CssSelector("[class^='col-lg-']"));
+                        var filename = driverRows.Where(o => o.Text.Contains("File Name")).FirstOrDefault()?.Text?.Replace("File Name: ", "");
+                        var description = driverRows.Where(o => o.Text.Contains("Description")).FirstOrDefault()?.Text?.Replace("Description: ", "");
+                        var version = driverRows.Where(o => o.Text.Contains("Version: ")).FirstOrDefault()?.Text?.Replace("Version: ", "");
+                        var importance = driverRows.Where(o => o.Text.Contains("Importance: ")).FirstOrDefault()?.Text?.Replace("Importance: ", "");
+                        var releaseDate = driverRows.Where(o => o.Text.Contains("Release Date: ")).FirstOrDefault()?.Text?.Replace("Release Date: ", "");
+                        var lastUpdated = driverRows.Where(o => o.Text.Contains("Last Updated: ")).FirstOrDefault()?.Text?.Replace("Last Updated: ", "");
+                        var driverUrl = drivermain.FindElement(By.CssSelector("a.text-blue.dellmetrics-driverdownloads.driverHomeDownload.ng-binding"))?.GetAttribute("href");
+
+                        dellAsset.Drivers.Add(
+                            new Driver
+                            {
+                                Component = component,
+                                Description = description,
+                                Filename = filename,
+                                Importance = importance,
+                                LastUpdated = DateTime.ParseExact(lastUpdated, new[] { "dd MMM yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind),
+                                ReleaseDate = DateTime.ParseExact(releaseDate, new[] { "dd MMM yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind),
+                                Name = name,
+                                Url = driverUrl,
+                                Version = version
+                            });
+                    }
                 }
             }
 
