@@ -33,14 +33,15 @@ namespace DellServiceTagData
         public void CreateDellAsset(IComClassDellAsset asset)
         {
             string connString = "Server=12.41.72.28;Port=3306;Database=gpdb;Uid=allgreen2;Pwd=7Ld4S8d4TaDWApVW;Allow User Variables=True";
-            using (var conn = new MySqlConnection(connString))
+            using (var connection = new MySqlConnection(connString))
             {
-                conn.Open();
-                MySqlCommand comm = conn.CreateCommand();
+                connection.Open();
+                MySqlCommand comm = connection.CreateCommand();
                 comm.CommandText =
                     @"INSERT INTO tbldellservicetags(
 country_lookup_code,machine_description,service_tag,ship_date) 
                     VALUES(@country_lookup_code,  @machine_description, @service_tag, @ship_date)";
+
                 comm.Parameters.AddWithValue("@country_lookup_code", asset.CountryLookupCode);
              //   comm.Parameters.AddWithValue("@customer_number", asset.CustomerNumber);
              //   comm.Parameters.AddWithValue("@is_duplicate", asset.IsDuplicate);
@@ -52,7 +53,33 @@ country_lookup_code,machine_description,service_tag,ship_date)
                 comm.Parameters.AddWithValue("@service_tag", asset.ServiceTag);
                 comm.Parameters.AddWithValue("@ship_date", asset.ShipDate);
                 comm.ExecuteNonQuery();
-                conn.Close();
+               var id = comm.LastInsertedId;
+
+                foreach (var component in asset.Components)
+                {
+                    var componentCom = connection.CreateCommand();
+                    componentCom.CommandText = @"INSERT INTO tbldellservicetagcomponents(
+                        parent_id,description) 
+                    VALUES(@parent_id,  @description)";
+                    componentCom.Parameters.AddWithValue("@parent_id", id);
+                    componentCom.Parameters.AddWithValue("@description", component.Description);
+                    componentCom.ExecuteNonQuery();
+                    var componentid = componentCom.LastInsertedId;
+                    foreach (var part in component.Parts)
+                    {
+                        var partCom = connection.CreateCommand();
+                        partCom.CommandText = @"INSERT INTO tbldellservicetagcomponentparts(
+                            parent_id,partnumber,quantity,description) 
+                        VALUES(@parent_id,  @partnumber, @quantity, @description)";
+                        partCom.Parameters.AddWithValue("@parent_id", componentid);
+                        partCom.Parameters.AddWithValue("@partnumber", part.PartNumber);
+                        partCom.Parameters.AddWithValue("@quantity", part.Quantity);
+                        partCom.Parameters.AddWithValue("@description", part.Description);
+                        partCom.ExecuteNonQuery();
+                    }
+                }
+
+                connection.Close();
             }
         }
     }
