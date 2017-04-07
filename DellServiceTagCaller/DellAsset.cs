@@ -61,10 +61,7 @@ namespace DellServiceTagData
     [ComVisible(true)]
     public interface IComClassComponent
     {
-         string ItemClassCode { get; set; }
-         string LocalChannel { get; set; }
-         string MachineDescription { get; set; }
-
+         string Description { get; set; }
          List<IComClassPart> Parts { get; set; }
     }
 
@@ -83,9 +80,7 @@ namespace DellServiceTagData
 
     public class Component : IComClassComponent
     {
-        public string ItemClassCode { get; set; }
-        public string LocalChannel { get; set; }
-        public string MachineDescription { get; set; }
+        public string Description { get; set; }
 
         public List<IComClassPart> Parts { get; set; }
     }
@@ -97,6 +92,7 @@ namespace DellServiceTagData
          string PartNumber { get; set; }
          short Quantity { get; set; }
          string Description { get; set; }
+
     }
 
     [Guid("7BD20046-DF8C-44A6-8F6B-687FAA26E070"),

@@ -15,7 +15,7 @@ namespace DellServiceTagLauncher
         {
             try
             {
-                var serviceTag = args[0];// "9QWPGT1";
+                var serviceTag = "9QWPGT1";// args[0];// "9QWPGT1";
                 var dellAsset = new ApiCaller().GetDellAsset(serviceTag, "asdadadasd");
                 if (dellAsset == null)
                 {

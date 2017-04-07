@@ -50,7 +50,7 @@ namespace DellServiceTagSelenium
             this.Driver.Url = $"http://www.dell.com/support/home/us/en/19/product-support/servicetag/{serviceTag}/diagnose";
             this.Driver.Navigate();
             var feedbackOverlay = this.Driver.FindElementsByCssSelector("[onclick='ipe120994.clWin();']");
-            if(feedbackOverlay.Any())
+            if (feedbackOverlay.Any())
                 feedbackOverlay.First().Click();
 
             var configurationTab = this.Driver.FindElementsById("tab-configuration");
@@ -68,13 +68,45 @@ namespace DellServiceTagSelenium
 
             var countryRow = rows.Where(o => o.Text.Contains("Country")).FirstOrDefault();
             var country = countryRow.FindElements(By.CssSelector("td"))[1].Text;
-
-            return new DellAsset{
+            var dellAsset = new DellAsset
+            {
                 ServiceTag = serviceTag,
                 MachineDescription = computerModel,
                 ShipDate = shippingDate.ToString("yyyy-MM-dd"),
-                CountryLookupCode = country
+                CountryLookupCode = country,
+                Components = new List<IComClassComponent>()
             };
+            var componentsLink = this.Driver.FindElementById("hrefsubSectionB");
+            componentsLink.Click();
+            Thread.Sleep(1000);
+            var componentSection = this.Driver.FindElementById("subSectionB");
+            var containers = componentSection.FindElements(By.CssSelector(".top-offset-20"));
+
+            foreach (var container in containers)
+            {
+                var heading = componentSection.FindElement(By.CssSelector("[onclick='enableExpColBtn();']"));
+                heading.Click();
+                Thread.Sleep(500);
+                var component = new Component { Description = heading.Text, Parts = new List<IComClassPart>() };
+                var tdCells = container.FindElements(By.CssSelector("td"));
+                foreach (var tdCell in tdCells) {
+                    if (!tdCell.Text.Contains("Part Number"))
+                    {
+                        var divCells = tdCell.FindElements(By.CssSelector("div"));
+                        component.Parts.Add(
+                            new Part {
+                                PartNumber = divCells[0].Text,
+                                Quantity = short.Parse(divCells[1].Text),
+                                Description = divCells[2].Text
+                            });
+                    }
+                }
+
+                dellAsset.Components.Add(component);
+            }
+
+
+            return dellAsset;
         }
     }
 }
