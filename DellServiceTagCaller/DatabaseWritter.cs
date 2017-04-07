@@ -39,14 +39,14 @@ namespace DellServiceTagData
                 MySqlCommand comm = connection.CreateCommand();
                 comm.CommandText =
                     @"INSERT INTO tbldellservicetags(
-country_lookup_code,machine_description,service_tag,ship_date) 
-                    VALUES(@country_lookup_code,  @machine_description, @service_tag, @ship_date)";
+country_lookup_code,machine_description,service_tag,ship_date,express_Service_Code,regulatory_Model, Regulatory_Type) 
+                    VALUES(@country_lookup_code,  @machine_description, @service_tag, @ship_date,@expressServiceCode,@regulatoryModel,@RegulatoryType)";
 
                 comm.Parameters.AddWithValue("@country_lookup_code", asset.CountryLookupCode);
-             //   comm.Parameters.AddWithValue("@customer_number", asset.CustomerNumber);
-             //   comm.Parameters.AddWithValue("@is_duplicate", asset.IsDuplicate);
-             //   comm.Parameters.AddWithValue("@item_class_code", asset.ItemClassCode);
-            //    comm.Parameters.AddWithValue("@local_channel", asset.LocalChannel);
+                   comm.Parameters.AddWithValue("@expressServiceCode", asset.ExpressServiceCode);
+                   comm.Parameters.AddWithValue("@regulatoryModel", asset.RegulatoryModel);
+                   comm.Parameters.AddWithValue("@RegulatoryType", asset.RegulatoryType);
+                //    comm.Parameters.AddWithValue("@RegulatoryType", asset.LocalChannel);
                 comm.Parameters.AddWithValue("@machine_description", asset.MachineDescription);
            //     comm.Parameters.AddWithValue("@order_number", asset.OrderNumber);
            //     comm.Parameters.AddWithValue("@parent_service_tag", asset.ParentServiceTag);

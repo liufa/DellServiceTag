@@ -53,8 +53,13 @@ namespace DellServiceTagSelenium
             if (feedbackOverlay.Any())
                 feedbackOverlay.First().Click();
 
-            var configurationTab = this.Driver.FindElementsById("tab-configuration");
-            configurationTab.First().Click();
+            this.Driver.FindElementById("tab-manuals").Click();
+            Thread.Sleep(3000);
+            var regulatory = this.Driver.FindElements(By.CssSelector(".top-offset-mini.bottom-offset-mini"));
+            var regulatoryModel = regulatory.Where(o => o.Text.Contains("Regulatory Model")).FirstOrDefault()?.Text?.Replace("Regulatory Model ","");
+            var regulatoryType = regulatory.Where(o => o.Text.Contains("Regulatory Type")).FirstOrDefault()?.Text?.Replace("Regulatory Type ", "");
+
+            this.Driver.FindElementById("tab-configuration").Click();
             Thread.Sleep(3000);
             var configurationDivContainer = this.Driver.FindElementsById("subSectionA").First();
 
@@ -65,7 +70,8 @@ namespace DellServiceTagSelenium
             var shippingDateCell = shippingDateRow.FindElements(By.CssSelector("td"))[1].Text;
 
             var shippingDate = DateTime.ParseExact(shippingDateCell, new[] { "M/d/yyyy", "M/dd/yyyy", "MM/dd/yyyy" }, null, System.Globalization.DateTimeStyles.RoundtripKind);
-
+            var expressServiceCodeSpan = this.Driver.FindElementByClassName("beforeCaptcha");
+            var expressServiceCode = expressServiceCodeSpan.Text.Replace("Express Service Code: ", "");
             var countryRow = rows.Where(o => o.Text.Contains("Country")).FirstOrDefault();
             var country = countryRow.FindElements(By.CssSelector("td"))[1].Text;
             var dellAsset = new DellAsset
@@ -74,7 +80,10 @@ namespace DellServiceTagSelenium
                 MachineDescription = computerModel,
                 ShipDate = shippingDate.ToString("yyyy-MM-dd"),
                 CountryLookupCode = country,
-                Components = new List<IComClassComponent>()
+                Components = new List<IComClassComponent>(),
+                ExpressServiceCode = expressServiceCode,
+                RegulatoryModel = regulatoryModel,
+                RegulatoryType = regulatoryType
             };
             var componentsLink = this.Driver.FindElementById("hrefsubSectionB");
             componentsLink.Click();
@@ -110,6 +119,8 @@ namespace DellServiceTagSelenium
                 }
             }
 
+            this.Driver.FindElementById("tab-drivers").Click();
+            Thread.Sleep(3000);
 
             return dellAsset;
         }
