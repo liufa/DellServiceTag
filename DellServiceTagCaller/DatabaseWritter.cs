@@ -30,9 +30,10 @@ namespace DellServiceTagData
     [ProgId("ProgId.DatabaseWritter")]
     public class DatabaseWritter : IComClassDatabaseWritter
     {
+        private string connString = "Server=12.41.72.28;Port=3306;Database=gpdb;Uid=allgreen2;Pwd=7Ld4S8d4TaDWApVW;Allow User Variables=True";
         public void CreateDellAsset(IComClassDellAsset asset)
         {
-            string connString = "Server=12.41.72.28;Port=3306;Database=gpdb;Uid=allgreen2;Pwd=7Ld4S8d4TaDWApVW;Allow User Variables=True";
+
             using (var connection = new MySqlConnection(connString))
             {
                 connection.Open();
@@ -43,17 +44,17 @@ country_lookup_code,machine_description,service_tag,ship_date,express_Service_Co
                     VALUES(@country_lookup_code,  @machine_description, @service_tag, @ship_date,@expressServiceCode,@regulatoryModel,@RegulatoryType)";
 
                 comm.Parameters.AddWithValue("@country_lookup_code", asset.CountryLookupCode);
-                   comm.Parameters.AddWithValue("@expressServiceCode", asset.ExpressServiceCode);
-                   comm.Parameters.AddWithValue("@regulatoryModel", asset.RegulatoryModel);
-                   comm.Parameters.AddWithValue("@RegulatoryType", asset.RegulatoryType);
+                comm.Parameters.AddWithValue("@expressServiceCode", asset.ExpressServiceCode);
+                comm.Parameters.AddWithValue("@regulatoryModel", asset.RegulatoryModel);
+                comm.Parameters.AddWithValue("@RegulatoryType", asset.RegulatoryType);
                 //    comm.Parameters.AddWithValue("@RegulatoryType", asset.LocalChannel);
                 comm.Parameters.AddWithValue("@machine_description", asset.MachineDescription);
-           //     comm.Parameters.AddWithValue("@order_number", asset.OrderNumber);
-           //     comm.Parameters.AddWithValue("@parent_service_tag", asset.ParentServiceTag);
+                //     comm.Parameters.AddWithValue("@order_number", asset.OrderNumber);
+                //     comm.Parameters.AddWithValue("@parent_service_tag", asset.ParentServiceTag);
                 comm.Parameters.AddWithValue("@service_tag", asset.ServiceTag);
                 comm.Parameters.AddWithValue("@ship_date", asset.ShipDate);
                 comm.ExecuteNonQuery();
-               var id = comm.LastInsertedId;
+                var id = comm.LastInsertedId;
 
                 foreach (var component in asset.Components)
                 {
@@ -96,10 +97,23 @@ country_lookup_code,machine_description,service_tag,ship_date,express_Service_Co
                     componentCom.Parameters.AddWithValue("@last_updated", driver.LastUpdated);
                     componentCom.Parameters.AddWithValue("@download_link", driver.Url);
                     componentCom.ExecuteNonQuery();
-                    
+
                 }
 
                 connection.Close();
+            }
+        }
+
+        public bool CheckIfExists(string serviceTag)
+        {
+            using (var connection = new MySqlConnection(connString))
+            {
+                connection.Open();
+                MySqlCommand comm = connection.CreateCommand();
+                comm.CommandText =
+                    @"Select 1 from tbldellservicetags Where service_tag = @service_tag";
+                comm.Parameters.AddWithValue("@service_tag", serviceTag);
+                return comm.ExecuteReader().HasRows;
             }
         }
     }
