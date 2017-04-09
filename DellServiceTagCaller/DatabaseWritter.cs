@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Runtime.InteropServices;
+using System.Configuration;
 
 namespace DellServiceTagData
 {
@@ -30,7 +31,7 @@ namespace DellServiceTagData
     [ProgId("ProgId.DatabaseWritter")]
     public class DatabaseWritter : IComClassDatabaseWritter
     {
-        private string connString = "Server=12.41.72.28;Port=3306;Database=gpdb;Uid=allgreen2;Pwd=7Ld4S8d4TaDWApVW;Allow User Variables=True";
+        private string connString = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
         public void CreateDellAsset(IComClassDellAsset asset)
         {
 
