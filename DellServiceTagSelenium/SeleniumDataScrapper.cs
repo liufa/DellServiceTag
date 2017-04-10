@@ -124,7 +124,11 @@ namespace DellServiceTagSelenium
 
             this.Driver.FindElementById("tab-drivers").Click();
             Thread.Sleep(5000);
-            this.Driver.FindElement(By.Id("DndAdvTabLink")).Click();
+            var tabCurrent = this.Driver.FindElements(By.Id("DndAdvTabLink"));
+            if (tabCurrent.Any())
+                tabCurrent.First().Click();
+
+
             Thread.Sleep(500);
             var driversSection = this.Driver.FindElementById("divDriversSection");
 
